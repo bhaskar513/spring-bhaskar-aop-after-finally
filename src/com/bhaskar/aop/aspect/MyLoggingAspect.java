@@ -3,7 +3,9 @@ package com.bhaskar.aop.aspect;
 import java.util.List;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 
@@ -19,8 +21,31 @@ import com.bhaskar.aop.Account;
 @Order(2)
 public class MyLoggingAspect {
 	
-	// add a new advice for @AfterReturning
 	
+	@After("execution(* com.bhaskar.aop.dao.AccountDAO.findAccounts(..))")
+	public void AfterFinallyFingAccountsAdvice(JoinPoint theJointPoint) {
+		
+		String method=theJointPoint.getSignature().toShortString();
+		System.out.println("\n ========> Executing @After (finally&&&&&)  on method: "+ method);
+		
+		
+	}
+	
+	
+	
+	@AfterThrowing(
+			pointcut="execution(* com.bhaskar.aop.dao.AccountDAO.findAccounts(..))",
+			throwing="theExc")
+	public void AfterThrowingFingAccountsAdvice(
+			JoinPoint theJointPoint, Throwable theExc) {
+		
+		String method=theJointPoint.getSignature().toShortString();
+		System.out.println("\n ========> Executing @AfterThrowing on method: "+ method);
+		System.out.println("\n ======= theExc is : " +theExc);
+		
+	}
+	
+	// add a new advice for @AfterReturning
 	@AfterReturning(
 			pointcut="execution(* com.bhaskar.aop.dao.AccountDAO.findAccounts(..))",
 			returning="result")
